@@ -9,6 +9,10 @@ void main() async {
 
   runApp(MaterialApp(
     home: Home(),
+    theme: ThemeData(
+      hintColor: Colors.amber,
+      primaryColor: Colors.white
+    )
   ));
 
 }
@@ -24,6 +28,26 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  final realController = TextEditingController();
+  final dolarController = TextEditingController();
+  final euroController = TextEditingController();
+
+  double dolar;
+  double euro;
+
+  void _realChanged(String text){
+
+  }
+
+  void _dolarChanged(String text){
+
+  }
+
+  void _euroChanged(String text){
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,11 +86,54 @@ class _HomeState extends State<Home> {
                       )
                   );
                 } else {
-                  return Container(color: Colors.green);
+                  dolar = snapshot.data['results']['currencies']['USD']['buy'];
+                  euro = snapshot.data['results']['currencies']['EUR']['buy'];
+
+                  return SingleChildScrollView(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Padding(
+                            padding: EdgeInsets.all(40),
+                            child: Icon(
+                                Icons.monetization_on,
+                                size: 150,
+                                color: Colors.amber
+                            )
+                        ),
+                        buildTextField("Real", "R\$", realController, _realChanged),
+                        Divider(),
+                        buildTextField("Dolar", "US\$", dolarController, _dolarChanged),
+                        Divider(),
+                        buildTextField("Euro", "E", euroController, _euroChanged)
+                      ],
+                    )
+                  );
                 }
             }
           }
       ),
     );
   }
+}
+
+Widget buildTextField(String label, String prefix, TextEditingController controller, Function f){
+  return TextField(
+    controller: controller,
+    decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(
+            color: Colors.amber
+        ),
+        border: OutlineInputBorder(),
+        prefixText: prefix
+    ),
+    style: TextStyle(
+        color: Colors.amber,
+        fontSize: 25
+    ),
+    onChanged: f,
+    keyboardType: TextInputType.number,
+  );
 }
